@@ -18,6 +18,20 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+
+  // Dominio que tengan acceso (ej. 'http://example.com')
+     res.setHeader('Access-Control-Allow-Origin', '*');
+  
+  // Metodos de solicitud que deseas permitir
+     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  
+  // Encabecedados que permites (ej. 'X-Requested-With,content-type')
+     res.setHeader('Access-Control-Allow-Headers', '*');
+  
+  next();
+  })
+
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -31,10 +45,12 @@ app.get('/',function(req, res){
 });
 
 app.use(require('./routes/usuario'));
+app.use(require('./routes/producto'));
+app.use(require('./routes/categoria'));
 app.use(require('./routes/email'));
 app.use(require('./routes/usuarioRec'));
 
- mongoose.connect('mongodb+srv://admin:3526@cluster0.4pvv9.mongodb.net/Dwin',{
+ mongoose.connect('mongodb+srv://admin:3526@cluster0.4pvv9.mongodb.net/PuntoVenta',{
       useNewUrlParser: true,
       useUnifiedTopology: true,
       useFindAndModify: false,

@@ -1,21 +1,21 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
-const Usuario = require('../models/usuario');
+const Producto = require('../models/productos');
 const app = express();
 var nodemailer = require('nodemailer');
 
  
   
-  app.get('/usuario', function (req, res) {
+  app.get('/producto', function (req, res) {
 
       let desde = req.query.desde || 0;
       let hasta = req.query.hasta || 100;
 
-    Usuario.find({})
+    Producto.find({})
     .skip(Number(desde))
     .limit(Number(hasta))
-    .exec((err, usuarios) =>{
+    .exec((err, productos) =>{
        if(err) {
            return res.status(400).json({
                ok: false,
@@ -26,18 +26,18 @@ var nodemailer = require('nodemailer');
 
        res.json({
            ok:true,
-           msg: 'Lista de usuarios obtenida con exito',
-           conteo: usuarios.length,
-           usuarios
+           msg: 'Lista de productos obtenida con exito',
+           conteo: productos.length,
+           productos
        });
     });
   });
 
-  app.get('/usuario/:email', function (req, res) {
+  app.get('/producto/:_id', function (req, res) {
 
-    let idusuario = req.params.email;
-  Usuario.findOne({email: idusuario})
-  .exec((err, usuarios) =>{
+    let idproducto = req.params.email;
+  Producto.findOne({_id: idproducto})
+  .exec((err, productos) =>{
      if(err) {
          return res.status(400).json({
              ok: false,
@@ -49,36 +49,27 @@ var nodemailer = require('nodemailer');
      res.json({
          ok:true,
          msg: 'usuario obtenida con exito',
-         conteo: usuarios.length,
-         usuarios
+         conteo: productos.length,
+         productos
      });
   });
 });
   
-  app.post('/usuario', function (req, res) {
+  app.post('/producto', function (req, res) {
     let body = req.body;
-    let usr = new Usuario({
+    let pro = new Producto({
         //_id: req.body._id,
         nombre: body.nombre,
-        apellidos: req.body.apellidos,
-        email: body.email,
-        password: body.password,
-        telefono: body.telefono,
-        nombreempresa: body.nombreempresa
+        categoriaID: req.body.categoriaID,
+        precio: body.precio,
+        cantidad: body.cantidad,
+        cantidadMax: body.cantidadMax,
+        cantidadMed: body.cantidadMed
     });
-    var transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-          user: 'joan.montoya.1c@gmail.com', // generated ethereal user
-          pass: 'xyhjpsulieliqpbu', // generated ethereal password
-        },
-      });
 
       
     
-    usr.save((err, usrDB) => {
+    pro.save((err, proDB) => {
         if(err) {
             return res.status(400).json({
                 status: 'error',
@@ -87,23 +78,9 @@ var nodemailer = require('nodemailer');
         }
         res.json({
             ok: true,
-            msg: 'Usuario insertado con exito',
-            usrDB
+            msg: 'Producto insertado con exito',
+            proDB
         });
-        var mailOptions = {
-            from: "Aplicacion Login de joan",
-            to: usrDB.email,
-            subject: "Registro exitoso",
-            text: "Te has registrado en una aplicacion de prueba tu correo fue aceptado",
-          }
-           transporter.sendMail(mailOptions, (error, info) =>{
-            if(error) {
-                res.status(500).send(error.message);
-            }else{
-                console.log("emailEnviado");
-                res.status(200).jsonp(req.body);
-            }
-           })
     });
   });
   

@@ -1,21 +1,21 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const _ = require('underscore');
-const Usuario = require('../models/usuario');
+const Categoria = require('../models/categorias');
 const app = express();
 var nodemailer = require('nodemailer');
 
  
   
-  app.get('/usuario', function (req, res) {
+  app.get('/categoria', function (req, res) {
 
       let desde = req.query.desde || 0;
       let hasta = req.query.hasta || 100;
 
-    Usuario.find({})
+    Categoria.find({})
     .skip(Number(desde))
     .limit(Number(hasta))
-    .exec((err, usuarios) =>{
+    .exec((err, categorias) =>{
        if(err) {
            return res.status(400).json({
                ok: false,
@@ -26,18 +26,18 @@ var nodemailer = require('nodemailer');
 
        res.json({
            ok:true,
-           msg: 'Lista de usuarios obtenida con exito',
-           conteo: usuarios.length,
-           usuarios
+           msg: 'Lista de categorias obtenida con exito',
+           conteo: categorias.length,
+           categorias
        });
     });
   });
 
-  app.get('/usuario/:email', function (req, res) {
+  app.get('/categoria/:_id', function (req, res) {
 
-    let idusuario = req.params.email;
-  Usuario.findOne({email: idusuario})
-  .exec((err, usuarios) =>{
+    let idcategoria = req.params._id;
+  Categoria.findOne({_id: idcategoria})
+  .exec((err, categorias) =>{
      if(err) {
          return res.status(400).json({
              ok: false,
@@ -49,36 +49,23 @@ var nodemailer = require('nodemailer');
      res.json({
          ok:true,
          msg: 'usuario obtenida con exito',
-         conteo: usuarios.length,
-         usuarios
+         conteo: categorias.length,
+         categorias
      });
   });
 });
   
-  app.post('/usuario', function (req, res) {
+  app.post('/categoria', function (req, res) {
     let body = req.body;
-    let usr = new Usuario({
+    let cat = new Categoria({
         //_id: req.body._id,
-        nombre: body.nombre,
-        apellidos: req.body.apellidos,
-        email: body.email,
-        password: body.password,
-        telefono: body.telefono,
-        nombreempresa: body.nombreempresa
+        nombreCat: req.body.nombreCat,
+        descripcion: req.body.descripcion
     });
-    var transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-          user: 'joan.montoya.1c@gmail.com', // generated ethereal user
-          pass: 'xyhjpsulieliqpbu', // generated ethereal password
-        },
-      });
 
       
     
-    usr.save((err, usrDB) => {
+    cat.save((err, catDB) => {
         if(err) {
             return res.status(400).json({
                 status: 'error',
@@ -87,23 +74,9 @@ var nodemailer = require('nodemailer');
         }
         res.json({
             ok: true,
-            msg: 'Usuario insertado con exito',
-            usrDB
+            msg: 'Categoria insertada con exito',
+            catDB
         });
-        var mailOptions = {
-            from: "Aplicacion Login de joan",
-            to: usrDB.email,
-            subject: "Registro exitoso",
-            text: "Te has registrado en una aplicacion de prueba tu correo fue aceptado",
-          }
-           transporter.sendMail(mailOptions, (error, info) =>{
-            if(error) {
-                res.status(500).send(error.message);
-            }else{
-                console.log("emailEnviado");
-                res.status(200).jsonp(req.body);
-            }
-           })
     });
   });
   
