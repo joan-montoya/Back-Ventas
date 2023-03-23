@@ -80,11 +80,11 @@ var nodemailer = require('nodemailer');
     });
   });
   
-  app.put('/usuario/:id', function (req, res) {
+  app.put('/categoria/:id', function (req, res) {
     let id = req.params.id
-    let body = _.pick(req.body,['nombre','apellidos','email','rol']);
+    let body = _.pick(req.body,['nombreCat','descripcion']);
 
-    Usuario.findByIdAndUpdate(id, body, { new:true, runValidators: true, context: 'query' }, (err, usrDB) =>{
+    Categoria.findByIdAndUpdate(id, body, { new:true, runValidators: true, context: 'query' }, (err, ctrDB) =>{
         if(err) {
             return res.status(400).json({
                 ok: false,
@@ -95,16 +95,16 @@ var nodemailer = require('nodemailer');
 
         res.json({
             ok:true,
-            msg: 'Usuario actualizado con exito',
-            usuario: usrDB
+            msg: 'Categoria actualizado con exito',
+            categoria: ctrDB
         });
     });
   });
   
-  app.delete('/usuario/:id', function (req, res) {
+  app.delete('/categoria/:id', function (req, res) {
      let id = req.params.id;
 
-      Usuario.deleteOne({ _id: id }, (err, usuarioBorrado) =>{
+      Categoria.deleteOne({ _id: id }, (err, categoriaBorrado) =>{
         if(err) {
             return res.status(400).json({
                 ok: false,
@@ -115,8 +115,8 @@ var nodemailer = require('nodemailer');
 
         res.json({
             ok: true,
-            msg: 'Usuario eliminado con exito',
-            usuarioBorrado
+            msg: 'Categoria eliminado con exito',
+            categoriaBorrado
         });
       });
       /*let id =  req.params.id;

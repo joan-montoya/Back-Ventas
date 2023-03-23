@@ -84,11 +84,11 @@ var nodemailer = require('nodemailer');
     });
   });
   
-  app.put('/usuario/:id', function (req, res) {
+  app.put('/producto/:id', function (req, res) {
     let id = req.params.id
-    let body = _.pick(req.body,['nombre','apellidos','email','rol']);
+    let body = _.pick(req.body,['nombre','cantidad','precio','cantidadMax','cantidadMed']);
 
-    Usuario.findByIdAndUpdate(id, body, { new:true, runValidators: true, context: 'query' }, (err, usrDB) =>{
+    Producto.findByIdAndUpdate(id, body, { new:true, runValidators: true, context: 'query' }, (err, prdDB) =>{
         if(err) {
             return res.status(400).json({
                 ok: false,
@@ -100,27 +100,27 @@ var nodemailer = require('nodemailer');
         res.json({
             ok:true,
             msg: 'Usuario actualizado con exito',
-            usuario: usrDB
+            producto: prdDB
         });
     });
   });
   
-  app.delete('/usuario/:id', function (req, res) {
+  app.delete('/producto/:id', function (req, res) {
      let id = req.params.id;
 
-      Usuario.deleteOne({ _id: id }, (err, usuarioBorrado) =>{
+      Producto.deleteOne({ _id: id }, (err, productoBorrado) =>{
         if(err) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Ocurrio un error al intentar de eliminar el usuario',
+                msg: 'Ocurrio un error al intentar de eliminar el prodcuto',
                 err
             });
         }
 
         res.json({
             ok: true,
-            msg: 'Usuario eliminado con exito',
-            usuarioBorrado
+            msg: 'Producto eliminado con exito',
+            productoBorrado
         });
       });
       /*let id =  req.params.id;

@@ -15,10 +15,6 @@ let productoSchema = new Schema({
         type: String,
         required: [true, 'El nombre es necesario']
     },
-    precio:{
-        type: String,
-        required: [true, 'El correo es necesario'],
-    },
     cantidad: {
         type: String,
         required: [true, 'La contraseña es necesaria']
@@ -28,6 +24,10 @@ let productoSchema = new Schema({
         required: [true, 'La contraseña es necesaria']
     },
     cantidadMax: {
+        type: String,
+        required: [true, 'La contraseña es necesaria']
+    },
+    precio: {
         type: String,
         required: [true, 'La contraseña es necesaria']
     }
