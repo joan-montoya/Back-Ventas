@@ -45,6 +45,7 @@ app.get('/',function(req, res){
 });
 
 app.use(require('./routes/usuario'));
+app.use(require('./routes/ventas'));
 app.use(require('./routes/producto'));
 app.use(require('./routes/categoria'));
 app.use(require('./routes/email'));
