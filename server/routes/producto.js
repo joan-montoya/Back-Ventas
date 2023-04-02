@@ -84,7 +84,7 @@ var nodemailer = require('nodemailer');
     });
   });
   
-  app.put('/producto/:id', function (req, res) {
+  app.put('/productos/:id', function (req, res) {
     let id = req.params.id
     let body = _.pick(req.body,['nombre','cantidad','precio','cantidadMax','cantidadMed']);
 
@@ -96,7 +96,7 @@ var nodemailer = require('nodemailer');
                 err
             });
         }
-
+ 
         res.json({
             ok:true,
             msg: 'Usuario actualizado con exito',
